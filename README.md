@@ -14,4 +14,4 @@ The script simulates data-driven telescope telemetry modeled after the telescope
 
 5. **Offset and Actual Coordinate Derivation:** The script computes the resulting angular offsets (`Offset H`, `Offset D`) and outputs the true physical coordinates where the telescope mechanics would actually land (`Actual RA`, `Actual DEC`).
 
-6. **Fixed-Width Export:** The final output is written to a cleanly aligned, fixed-width space-separated text file (`synthetic_tpoint_data.dat`), matching the strict preprocessing schema required by modern astronomical pipeline utilities.
+6. **Fixed-Width Export:** The final output is written to a space-separated text file (`synthetic_tpoint_data.dat`)
