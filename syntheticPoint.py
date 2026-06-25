@@ -124,7 +124,7 @@ def main():
         horizon_filter = find_altitude_angle(pitch_rad, roll_rad)
 
         #for Haleakala, the horizon limit is 10 degrees
-        if horizon_filter < 10.0:
+        if horizon_filter < 15.0:
             continue
 
         total_offset_h = get_delta_h(pitch_rad, roll_rad)
