@@ -60,6 +60,18 @@ def get_delta_d(pitch, roll):
     pdd = PDD * pitch
     return id + mad + med + tfd + pdd
 
+def find_altitude_angle(pitch, roll,):
+    #Find zenith distance: angular distance from point overhead straight down to target object
+    cos_z = np.sin(PHI) * np.sin(pitch) + np.cos(PHI)*np.cos(pitch)*np.cos(roll)
+
+    #prevent overflow by keeping cosine between -1 and 1
+    cos_z = np.clip(cos_z, -1.0, 1.0)
+    #Find the angle (radians)
+    z_distance = np.arccos(cos_z)
+    
+    #get the angle limit (converting to degrees, pi/2 radians is 90 degrees)
+    return np.degrees((np.pi/2.0) - z_distance)
+
     
 def main():
     start_time = datetime(2026, 6, 24, 21, 0, 0)
@@ -109,6 +121,11 @@ def main():
         roll_deg = roll * 15.0
         roll_rad = np.radians(roll_deg)
 
+        horizon_filter = find_altitude_angle(pitch_rad, roll_rad)
+
+        #for Haleakala, the horizon limit is 10 degrees
+        if horizon_filter < 10.0:
+            continue
 
         total_offset_h = get_delta_h(pitch_rad, roll_rad)
         total_offset_d = get_delta_d(pitch_rad, roll_rad)
