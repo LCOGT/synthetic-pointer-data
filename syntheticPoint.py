@@ -94,8 +94,8 @@ def main():
 
         #but we can't just randomize minutes themselves, so lets randomize the gap between minutes (timedelta)
 
-        minute_gap = np.random.uniform(1, 10)
-        random_seconds = np.random.uniform(0, 59)
+        minute_gap = random.randint(1, 10)
+        random_seconds = random.randint(0, 59)
 
         current_time += timedelta(minutes = minute_gap, seconds = random_seconds)
         obs_time = Time(current_time)
