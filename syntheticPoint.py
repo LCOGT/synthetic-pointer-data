@@ -64,6 +64,7 @@ def get_delta_d(pitch, roll):
 def main():
     start_time = datetime(2026, 6, 24, 21, 0, 0)
     dataset = []
+    current_time = start_time
     for i in range(2000):
         lst_float = np.random.uniform(0.0, 24.0)
 
@@ -72,8 +73,20 @@ def main():
 
         icrs_coord = SkyCoord(ra=icrs_ra_float * u.hourangle, dec=icrs_dec_float * u.deg, frame='icrs')
 
-        #need an observation timestamp
-        obs_time = Time(start_time + timedelta(minutes=3 * i))
+        #need an observation timestamp, incremented at regular intervals, BUT it's better to have randomized timestamps i think
+        #SO let's add some random sub-minute noise
+        #obs_time = Time(start_time + timedelta(minutes=3 * i)) --scratch this
+
+        #originally we were incrementing by 3 minutes: let's randomize those minutes as well, making sure they increment chronogically
+        #because the model is autoregressive, so it trains based on PREVIOUS predictions
+
+        #but we can't just randomize minutes themselves, so lets randomize the gap between minutes (timedelta)
+
+        minute_gap = np.random.uniform(1, 10)
+        random_seconds = np.random.uniform(0, 59)
+
+        current_time += timedelta(minutes = minute_gap, seconds = random_seconds)
+        obs_time = Time(current_time)
 
         cirs_coord = icrs_coord.transform_to(CIRS(obstime = obs_time, location = TELESCOPE_LOC))
 
@@ -106,26 +119,43 @@ def main():
         actual_apparent_ra = target_ra_apparent + offset_h_hours
         actual_apparent_dec = target_dec_apparent + offset_d_degrees
 
+        #extract the parts of the observation time/date
+
+        obs_year = current_time.year
+        obs_month = current_time.month
+        obs_day = current_time.day
+        obs_hour = current_time.hour
+        obs_minute = current_time.minute
+        obs_second = current_time.second
+
         #add a row of data to the dictionary
+        ### training data input:
+        # Time/Date of observation: year, month, day, hour, minute, second
+        # Local Sidereal Time
+        # TPT (demanded) RA and Dec
+        # WCS (actual) RA and Dec
+
         dataset.append({
+            "Year": obs_year,
+            "Month": obs_month,
+            "Day": obs_day,
+            "Hour": obs_hour,
+            "Minute": obs_minute,
+            "Second": obs_second,
             "LST": lst_float,
-            "Roll": roll,
-            "Pitch": pitch,
-            "Offset H": offset_h_hours,
-            "Offset D": offset_d_degrees,
-            "Target RA": target_ra_apparent,
-            "Target DEC": target_dec_apparent,
-            "Actual RA": actual_apparent_ra,
-            "Actual DEC": actual_apparent_dec
+            "Target RA": target_ra_apparent,      #where the telescope SHOULD point (demanded?)
+            "Target Dec": target_dec_apparent,
+            "Actual RA": actual_apparent_ra,      #where the telescope is ACTUALLY pointing (is offset from target)
+            "Actual Dec": actual_apparent_dec
         })
 
     df = pd.DataFrame(dataset)
     
-    print("\nTable 1: Mount Coordinates and Offsets")
-    print(df[["Roll", "Pitch", "Offset H", "Offset D", "LST"]].head())
+    print("\nTraining Data")
+    print(df[["Year", "Month", "Day", "Hour", "Minute", "Second", "LST", "Target RA", "Target Dec", "Actual RA", "Actual Dec"]].head())
 
-    print("\nTable 2: Sky Target vs True Physical Mount Position")
-    print(df[["Target RA", "Target DEC", "Actual RA", "Actual DEC", "LST"]].head())
+    # print("\nTable 2: Sky Target vs True Physical Mount Position")
+    # print(df[["Target RA", "Target DEC", "Actual RA", "Actual DEC", "LST"]].head())
 
     # save to csv
     df.to_csv("~/Documents/synthetic_tpoint_data.dat", sep=" ", index=False)
