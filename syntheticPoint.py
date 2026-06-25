@@ -123,7 +123,7 @@ def main():
 
         horizon_filter = find_altitude_angle(pitch_rad, roll_rad)
 
-        #for Haleakala, the horizon limit is 10 degrees
+        #for Haleakala, the horizon limit is 15 degrees
         if horizon_filter < 15.0:
             continue
 
