@@ -4,6 +4,7 @@ import argparse
 import random
 import numpy as np
 import pandas as pd
+import h5py
 
 from astropy.io import fits
 from astropy.coordinates import SkyCoord, CIRS
@@ -30,6 +31,8 @@ from astropy.time import Time
 TELESCOPE_LOC = EarthLocation(lon=-156.2567 * u.deg, lat=20.7081 * u.deg, height=3048 * u.m)
 #define Tpoint constants
 ARCSEC_TO_RAD = np.radians(1.0 / 3600.0)
+
+#angle of the telescope above the ground
 PHI = np.radians(20.7081) #specific to the telescope located at the Haleakala site in Maui, Hawaii
 
 IH= 15.0 * ARCSEC_TO_RAD
@@ -77,8 +80,10 @@ def main():
     start_time = datetime(2026, 6, 24, 21, 0, 0)
     dataset = []
     current_time = start_time
-    for i in range(2000):
-        lst_float = np.random.uniform(0.0, 24.0)
+    #changing from for loop to while loop to account for data that might be dropped because of restrictions
+    while len(dataset) < 2000:
+        #lst_float = np.random.uniform(0.0, 24.0)
+        #generating a random lst that does not sync with the observation time will corrupt data
 
         icrs_ra_float = np.random.uniform(0.0, 24.0)
         icrs_dec_float = np.random.uniform(-65.0, 80.0)
@@ -104,6 +109,8 @@ def main():
 
         target_ra_apparent = cirs_coord.ra.hour
         target_dec_apparent = cirs_coord.dec.deg
+
+        lst_float = obs_time.sidereal_time('apparent', longitude=TELESCOPE_LOC.lon).hour
 
         pitch = target_dec_apparent
         roll = lst_float - target_ra_apparent
@@ -153,33 +160,45 @@ def main():
         # WCS (actual) RA and Dec
 
         dataset.append({
-            "Year": obs_year,
-            "Month": obs_month,
-            "Day": obs_day,
-            "Hour": obs_hour,
-            "Minute": obs_minute,
-            "Second": obs_second,
-            "LST": lst_float,
-            "Target RA": target_ra_apparent,      #where the telescope SHOULD point (demanded?)
-            "Target Dec": target_dec_apparent,
-            "Actual RA": actual_apparent_ra,      #where the telescope is ACTUALLY pointing (is offset from target)
-            "Actual Dec": actual_apparent_dec
+            "year": obs_year,
+            "month": obs_month,
+            "day": obs_day,
+            "hour": obs_hour,
+            "minute": obs_minute,
+            "second": obs_second,
+            "lst_hours": lst_float,
+            "obs_ra_deg": target_ra_apparent * 15.0,      #where the telescope SHOULD point (demanded?); also converting to degrees
+            "obs_dec_deg": target_dec_apparent,
+            "solv_ra_deg": actual_apparent_ra * 15.0,      #where the telescope is ACTUALLY pointing (is offset from target); converting to degrees
+            "solv_dec_deg": actual_apparent_dec
         })
 
     df = pd.DataFrame(dataset)
+
+    #Longitude = -110.95deg Latitude = 32.18deg  ---required first line
+    target_columns = ["year", "month", "day", "hour", "minute", "second", "lst_hours", "obs_ra_deg", "obs_dec_deg", "solv_ra_deg", "solv_dec_deg"]
     
+    df = df[target_columns]
     print("\nTraining Data")
-    print(df[["Year", "Month", "Day", "Hour", "Minute", "Second", "LST", "Target RA", "Target Dec", "Actual RA", "Actual Dec"]].head())
+    print(df.head())
 
-    # print("\nTable 2: Sky Target vs True Physical Mount Position")
-    # print(df[["Target RA", "Target DEC", "Actual RA", "Actual DEC", "LST"]].head())
+    telescope_header = "Longitude = 156.2567deg Latitude = 20.7081deg\n"
+    #ensuring compatibility with Streamlit GUI
+    output_path = os.path.expanduser("~/Documents/synthetic_tpoint_data.txt")
+    with open(output_path, "w", encoding = "utf-8") as f:
+        f.write(telescope_header)
+        df_string = df.to_csv(sep = " ", index = False)
+        f.write(df_string)
 
+    #ensuring compatibility with backend
+    numeric_matrix = df.to_numpy(dtype=float)
+    os.makedirs("data", exist_ok = True)
+    output_path_h5 = "data/data.h5"
+    with h5py.File(output_path_h5, "w") as hf:
+        hf.create_dataset("data", data=numeric_matrix, compression="gzip")
     # save to csv
-    df.to_csv("~/Documents/synthetic_tpoint_data.dat", sep=" ", index=False)
-    print("\nsaved to dat")
+    # df.to_csv("~/Documents/synthetic_tpoint_data.txt", sep=" ", index=False)
+    # print("\nsaved to txt")
 
 if __name__ == "__main__":
     main()
-
-
-
