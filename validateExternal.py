@@ -154,6 +154,14 @@ def main():
         predicted_ra_offset_deg = float(model_ra.predict(X)[0])
         predicted_dec_offset_deg = float(model_dec.predict(X)[0])
 
+        #true offset value needs to be negated
+        #In syntheticPoint.py: actual_apparent_dec = target_dec_apparent + offset_d_degrees
+        #So solv_dec = obs_dec + offset_d
+        #but in booster.py: y = obs_dec - solv_dec
+        #y = obs_dec - (obs_dec + offset_d) = -offset_d
+        #So the model learned to predict negative offset_d. 
+        # But in the validation script you're comparing against +offset_d_degrees as the ground truth. That's the sign mismatch.
+
         residual_ra_deg = (-offset_h_hours*15.0) - predicted_ra_offset_deg
         residual_dec_deg = (-offset_d_degrees) - predicted_dec_offset_deg
 
