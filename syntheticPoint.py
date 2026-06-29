@@ -81,7 +81,7 @@ def main():
     dataset = []
     current_time = start_time
     #changing from for loop to while loop to account for data that might be dropped because of restrictions
-    while len(dataset) < 2000:
+    while len(dataset) < 20000:
         #lst_float = np.random.uniform(0.0, 24.0)
         #generating a random lst that does not sync with the observation time will corrupt data
 
