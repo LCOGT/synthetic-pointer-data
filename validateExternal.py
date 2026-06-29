@@ -41,7 +41,7 @@ def main():
     model_dec = xgb.XGBRegressor()
     model_dec.load_model(os.path.expanduser("~/Documents/Portfolio/telescope-api-main/api/models/model_dec.json"))
 
-    while len(dataset) < 20000:
+    while len(dataset) < 1000:
         #lst_float = np.random.uniform(0.0, 24.0)
         #generating a random lst that does not sync with the observation time will corrupt data
 
@@ -153,7 +153,7 @@ def main():
 
         predicted_ra_offset_deg = float(model_ra.predict(X)[0])
         predicted_dec_offset_deg = float(model_dec.predict(X)[0])
-        
+
         residual_ra_deg = (offset_h_hours*15.0) - predicted_ra_offset_deg
         residual_dec_deg = offset_d_degrees - predicted_dec_offset_deg
 
@@ -169,7 +169,7 @@ def main():
         dataset.append(row)
 
         if len(dataset) % 500 == 0:
-            print(f"{len(dataset)} / 20000 complete")
+            print(f"{len(dataset)} / 1000 complete")
 
     data = p.DataFrame(dataset)
     columns = [
