@@ -154,8 +154,8 @@ def main():
         predicted_ra_offset_deg = float(model_ra.predict(X)[0])
         predicted_dec_offset_deg = float(model_dec.predict(X)[0])
 
-        residual_ra_deg = (offset_h_hours*15.0) - predicted_ra_offset_deg
-        residual_dec_deg = offset_d_degrees - predicted_dec_offset_deg
+        residual_ra_deg = (-offset_h_hours*15.0) - predicted_ra_offset_deg
+        residual_dec_deg = (-offset_d_degrees) - predicted_dec_offset_deg
 
         row.update({
             "predicted_roll_offset": predicted_ra_offset_deg,
