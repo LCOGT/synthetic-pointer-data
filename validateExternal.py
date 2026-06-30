@@ -162,8 +162,8 @@ def main():
         #So the model learned to predict negative offset_d. 
         # But in the validation script you're comparing against +offset_d_degrees as the ground truth. That's the sign mismatch.
 
-        residual_ra_deg = (-offset_h_hours*15.0) - predicted_ra_offset_deg
-        residual_dec_deg = (-offset_d_degrees) - predicted_dec_offset_deg
+        residual_ra_deg = (offset_h_hours*15.0) - predicted_ra_offset_deg
+        residual_dec_deg = offset_d_degrees - predicted_dec_offset_deg
 
         row.update({
             "predicted_roll_offset": predicted_ra_offset_deg,
