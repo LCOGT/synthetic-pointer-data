@@ -136,8 +136,8 @@ def main():
             #prev_vals = read_previous_from_log(args.log_file) ---internal stuff that is invisible to me
 
             #ground truth
-            "total_offset_roll": offset_h_hours * 15.0,
-            "total_offset_pitch": offset_d_degrees
+            "total_offset_roll": offset_h_hours * 15.0, #in degrees
+            "total_offset_pitch": offset_d_degrees #in degrees
         }
 
         # response = requests.post("http://localhost:5001/predict", json=row)
@@ -171,7 +171,19 @@ def main():
             "residual_ra": residual_ra_deg,
             "residual_dec": residual_dec_deg,
             "roll_hours": roll,
-            "pitch_deg": pitch
+            "pitch_deg": pitch,
+            "ch": CH * (1.0 / np.cos(pitch_rad)),
+            "ih": +IH,
+            "mah": -MA * np.cos(roll_rad) * np.tan(pitch_rad),
+            "meh": ME * np.sin(roll_rad) * np.tan(pitch_rad),
+            "nP": NP * np.tan(pitch_rad),
+            "tfh": TF * np.cos(PHI) * np.sin(roll_rad) * (1/np.cos(pitch_rad)),
+            "phh": PHH * roll_rad,
+            "id": ID,
+            "mad": MA * np.sin(roll_rad),
+            "med": ME * np.cos(roll_rad),
+            "tfd": TF * ((np.cos(PHI)*np.cos(roll_rad)*np.sin(pitch_rad)) - (np.sin(PHI)*np.cos(pitch_rad))),
+            "pdd": PDD * pitch_rad
         })
 
         dataset.append(row)
@@ -183,7 +195,9 @@ def main():
     columns = [
             "year", "month", "day", "hour", "minute", "second", "lst_hours", 
             "obs_ra_deg", "obs_dec_deg", "lat_deg", "lon_deg", "elevation_m",
-            "total_offset_roll", "total_offset_pitch", "predicted_roll_offset", "predicted_pitch_offset", "residual_ra", "residual_dec", "roll_hours", "pitch_deg"
+            "total_offset_roll", "total_offset_pitch", "predicted_roll_offset", "predicted_pitch_offset", "residual_ra", "residual_dec", "roll_hours", "pitch_deg",
+            "ch", "ih", "mah", "meh", "nP", "tfh", "phh",
+            "id", "mad", "med", "tfd", "pdd"
         ]
     data = data[columns]
     print("\n Results")
