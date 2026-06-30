@@ -140,8 +140,8 @@ def main():
         offset_h_hours = np.degrees(total_offset_h) / 15.0
         offset_d_degrees = np.degrees(total_offset_d)
 
-        actual_apparent_ra = target_ra_apparent + offset_h_hours
-        actual_apparent_dec = target_dec_apparent + offset_d_degrees
+        actual_apparent_ra = target_ra_apparent - offset_h_hours
+        actual_apparent_dec = target_dec_apparent - offset_d_degrees
 
         #extract the parts of the observation time/date
 
