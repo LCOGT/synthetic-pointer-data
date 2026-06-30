@@ -2,7 +2,7 @@
 
 ### Training
 
-**syntheticPoint.py**
+`syntheticPoint.py`
 
 The script simulates data-driven telescope telemetry modeled after the telescope in Haleakala, Hawaii (ogg.clma.2m0a). It is designed to create a baseline dataset for training the machine learning model presented at SPIE 2026 researching data-driven acquisition offset correction for telescope networks to validate its accuracy against synthetic Tpoint-based calculations. The generator executes according to the following steps:
 
