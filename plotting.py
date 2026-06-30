@@ -7,8 +7,8 @@ print(data.head())
 
 roll = data["roll_hours"]
 pitch = data["pitch_deg"]
-residual_ra = data["residual_ra"]
-residual_dec = data["residual_dec"]
+residual_ra = data["residual_ra"] * 3600
+residual_dec = data["residual_dec"] * 3600
 
 fig, axes = mat.subplots(2, 2, figsize = (12, 8))
 fig.suptitle("Residuals vs. Roll and Pitch")
@@ -18,25 +18,25 @@ fig.suptitle("Residuals vs. Roll and Pitch")
 axes[0,0].scatter(roll, residual_ra, s=5, alpha=0.5)
 axes[0,0].axhline(0, color='red', linewidth=1)
 axes[0,0].set_xlabel("Roll (hours)")
-axes[0,0].set_ylabel("Residual RA (deg)")
+axes[0,0].set_ylabel("Residual RA (arcsec)")
 
 #top right: residual ra vs. pitch
 axes[0,1].scatter(pitch, residual_ra, s=5, alpha=0.5)
 axes[0,1].axhline(0, color='red', linewidth=1)
 axes[0,1].set_xlabel("Pitch (deg)")
-axes[0,1].set_ylabel("Residual RA (deg)")
+axes[0,1].set_ylabel("Residual RA (arcsec)")
 
 #bottom left: residual dec vs. roll
 axes[1,0].scatter(roll, residual_dec, s=5, alpha=0.5)
 axes[1,0].axhline(0, color='red', linewidth=1)
 axes[1,0].set_xlabel("Roll (hours)")
-axes[1,0].set_ylabel("Residual Dec (deg)")
+axes[1,0].set_ylabel("Residual Dec (arcsec)")
 
 #bottom right: residual dec vs. pitch
 axes[1,1].scatter(pitch, residual_dec, s=5, alpha=0.5)
 axes[1,1].axhline(0, color='red', linewidth=1)
 axes[1,1].set_xlabel("Pitch (deg)")
-axes[1,1].set_ylabel("Residual Dec (deg)")
+axes[1,1].set_ylabel("Residual Dec (arcsec)")
 
 mat.tight_layout()
 mat.savefig(os.path.expanduser("~/Documents/synthetic-pointer-data/residual_plots.png"), dpi=150)
