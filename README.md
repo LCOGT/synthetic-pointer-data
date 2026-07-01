@@ -21,6 +21,8 @@ The script simulates data-driven telescope telemetry modeled after the telescope
 Because the training data is generated outside of the repository in which the model was built, the .h5 file must be shifted into Portfolio/telescope-api-main/api/data for the training data to be accessed.
 The data is then fed into `booster.py` to train the model, which outputs `model_ra.json` and `model_dec.json`, which gives the relative weight of each feature when the model was learning. 
 
+Note: changed booster.py locally to train model on all 20,000 points instead of having it split data into training, eval, and testing.
+
 ### Testing
 
 Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
