@@ -1,0 +1,24 @@
+=== RA Model Feature Importance ===
+               obs_dec_deg: 0.3645
+                 lst_hours: 0.2089
+                obs_ra_deg: 0.1974
+                       day: 0.0313
+                      hour: 0.0305
+                    second: 0.0286
+    previous_acq_error_dec: 0.0282
+     previous_acq_error_ra: 0.0281
+                    minute: 0.0280
+                      year: 0.0279
+                     month: 0.0265
+=== Dec Model Feature Importance ===
+                 lst_hours: 0.3275
+                obs_ra_deg: 0.3267
+               obs_dec_deg: 0.1016
+                      hour: 0.0378
+                      year: 0.0335
+                     month: 0.0315
+                    second: 0.0314
+    previous_acq_error_dec: 0.0301
+                       day: 0.0293
+                    minute: 0.0257
+     previous_acq_error_ra: 0.0249
