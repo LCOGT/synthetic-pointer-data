@@ -6,6 +6,7 @@ from syntheticPoint import IH, ID, CH, NP, MA, ME, TF, PHH, PDD, ARCSEC_TO_RAD, 
 
 
 data = pd.read_csv(os.path.expanduser("~/Documents/synthetic-pointer-data/residuals_data.csv"), sep=" ")
+data_old = pd.read_csv(os.path.expanduser("~/Documents/synthetic-pointer-data v.alpha/residuals_data.csv"), sep=" ")
 print(data.head())
 
 RAD_TO_ARCSEC = np.degrees(1) * 3600
@@ -21,6 +22,13 @@ roll = data["roll_hours"]
 pitch = data["pitch_deg"]
 residual_ra = data["residual_ra"] * DEG_TO_ARCSEC
 residual_dec = data["residual_dec"] * DEG_TO_ARCSEC
+
+roll_rad_new = np.radians(data["roll_hours"] * 15.0)
+pitch_rad_new = np.radians(data["pitch_deg"])
+sin_roll_new = np.sin(roll_rad_new)
+cos_roll_new = np.cos(roll_rad_new)
+sin_pitch_new = np.sin(pitch_rad_new)
+cos_pitch_new = np.cos(pitch_rad_new)
 
 total_offset_roll = data["total_offset_roll"] * DEG_TO_ARCSEC
 total_offset_pitch = data["total_offset_pitch"] * DEG_TO_ARCSEC
@@ -195,6 +203,111 @@ fig.text(0.80, 0.5, ref_text, fontsize=7, verticalalignment='center',
          fontfamily='monospace',
          bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
 mat.savefig(os.path.expanduser("~/Documents/synthetic-pointer-data/residual_plots_3b.png"), dpi=150, bbox_inches='tight')
+
+# PLOT 4: Before/After comparison — old vs new model residuals vs roll
+roll_old = data_old["roll_hours"]
+residual_ra_old = data_old["residual_ra"] * DEG_TO_ARCSEC
+residual_dec_old = data_old["residual_dec"] * DEG_TO_ARCSEC
+
+fig, axes = mat.subplots(2, 2, figsize=(16, 8))
+fig.suptitle("4. Before vs After: Residuals vs Roll (old model vs trig-feature model)")
+
+# Shared y-limits for fair comparison
+ra_ylim = (
+    min(residual_ra_old.min(), residual_ra.min()),
+    max(residual_ra_old.max(), residual_ra.max())
+)
+dec_ylim = (
+    min(residual_dec_old.min(), residual_dec.min()),
+    max(residual_dec_old.max(), residual_dec.max())
+)
+
+axes[0,0].scatter(roll_old, residual_ra_old, s=5, alpha=0.5, color='gray')
+axes[0,0].axhline(0, color='red', linewidth=1)
+axes[0,0].set_xlabel("Roll (hours)")
+axes[0,0].set_ylabel("Residual RA (arcsec)")
+axes[0,0].set_title("Old model")
+axes[0,0].set_ylim(ra_ylim)
+
+axes[0,1].scatter(roll, residual_ra, s=5, alpha=0.5, color='green')
+axes[0,1].axhline(0, color='red', linewidth=1)
+axes[0,1].set_xlabel("Roll (hours)")
+axes[0,1].set_ylabel("Residual RA (arcsec)")
+axes[0,1].set_title("New model (trig features)")
+axes[0,1].set_ylim(ra_ylim)
+
+axes[1,0].scatter(roll_old, residual_dec_old, s=5, alpha=0.5, color='gray')
+axes[1,0].axhline(0, color='red', linewidth=1)
+axes[1,0].set_xlabel("Roll (hours)")
+axes[1,0].set_ylabel("Residual Dec (arcsec)")
+axes[1,0].set_title("Old model")
+axes[1,0].set_ylim(dec_ylim)
+
+axes[1,1].scatter(roll, residual_dec, s=5, alpha=0.5, color='green')
+axes[1,1].axhline(0, color='red', linewidth=1)
+axes[1,1].set_xlabel("Roll (hours)")
+axes[1,1].set_ylabel("Residual Dec (arcsec)")
+axes[1,1].set_title("New model (trig features)")
+axes[1,1].set_ylim(dec_ylim)
+
+mat.tight_layout(rect=[0, 0, 0.78, 1])
+fig.text(0.80, 0.5, ref_text, fontsize=7, verticalalignment='center',
+         fontfamily='monospace',
+         bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+mat.savefig(os.path.expanduser("~/Documents/synthetic-pointer-data/residual_plots_4_comparison.png"), dpi=150, bbox_inches='tight')
+
+
+# PLOT 5: Histogram comparison of residual magnitudes — old vs new
+fig, axes = mat.subplots(1, 2, figsize=(16, 6))
+fig.suptitle("5. Residual Magnitude Distribution: Old vs New Model")
+
+axes[0].hist(np.abs(residual_ra_old), bins=50, alpha=0.5, label="Old model", color='gray')
+axes[0].hist(np.abs(residual_ra), bins=50, alpha=0.5, label="New model (trig features)", color='green')
+axes[0].set_xlabel("|Residual RA| (arcsec)")
+axes[0].set_ylabel("Count")
+axes[0].set_title("RA Residual Magnitude")
+axes[0].legend()
+
+axes[1].hist(np.abs(residual_dec_old), bins=50, alpha=0.5, label="Old model", color='gray')
+axes[1].hist(np.abs(residual_dec), bins=50, alpha=0.5, label="New model (trig features)", color='green')
+axes[1].set_xlabel("|Residual Dec| (arcsec)")
+axes[1].set_ylabel("Count")
+axes[1].set_title("Dec Residual Magnitude")
+axes[1].legend()
+
+mat.tight_layout(rect=[0, 0, 0.78, 1])
+fig.text(0.80, 0.5, ref_text, fontsize=7, verticalalignment='center',
+         fontfamily='monospace',
+         bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+mat.savefig(os.path.expanduser("~/Documents/synthetic-pointer-data/residual_plots_5_histogram.png"), dpi=150, bbox_inches='tight')
+
+# PLOT 6: Residual RA and Dec vs new trig features
+trig_features = {
+    "sin_roll": sin_roll_new,
+    "cos_roll": cos_roll_new,
+    "sin_pitch": sin_pitch_new,
+    "cos_pitch": cos_pitch_new,
+}
+
+fig, axes = mat.subplots(4, 2, figsize=(16, 16))
+fig.suptitle("6. Residual RA and Dec vs Trig Features (new model inputs)")
+
+for i, (name, values) in enumerate(trig_features.items()):
+    axes[i,0].scatter(values, residual_ra, s=5, alpha=0.5)
+    axes[i,0].axhline(0, color='red', linewidth=1)
+    axes[i,0].set_xlabel(name)
+    axes[i,0].set_ylabel("Residual RA (arcsec)")
+
+    axes[i,1].scatter(values, residual_dec, s=5, alpha=0.5)
+    axes[i,1].axhline(0, color='red', linewidth=1)
+    axes[i,1].set_xlabel(name)
+    axes[i,1].set_ylabel("Residual Dec (arcsec)")
+
+mat.tight_layout(rect=[0, 0, 0.78, 1])
+fig.text(0.80, 0.5, ref_text, fontsize=7, verticalalignment='center',
+         fontfamily='monospace',
+         bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+mat.savefig(os.path.expanduser("~/Documents/synthetic-pointer-data/residual_plots_6_trig.png"), dpi=150, bbox_inches='tight')
 
 
 mat.show()
