@@ -47,3 +47,20 @@ Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
 - **synthetic-pointer-data v.1**: First draft. Built a basic validation pipeline that used standard values for Tpoint coefficients and used the same features for model training/testing as provided by the author of the model. Removed eval/testing split in booster.py, trained model using ALL data points. Generated 3 categories of plots.
 
 - **synthetic-pointer-data v.2**: Restored validation split, implemented feature engineering (removed all time-related features and included sine and cosine values of roll/pitch. Generated 6 categories of plots.
+
+
+## Changes to `booster.py`
+Change 1 — Train on full dataset (later reverted)
+Initially modified main() to train on all 20,000 points with no train/eval/test split, removing early_stopping_rounds. This was per your manager's first instruction before the meeting with the model builder.
+Change 2 — Restored split + early stopping (per model builder's request)
+Reverted back to a chronological split, but simplified to train/eval only (90/10), no held-out test set — since validateExternal.py serves as your true external test. Restored early_stopping_rounds=100.
+Change 3 — Feature engineering overhaul (the trig features)
+In make_features_and_labels:
+
+Dropped: year, month, day, hour, minute, second (redundant proxies for lst_hours, confirmed by both your own hypothesis and the model builder's own coord.py design)
+Added: sin(roll_rad), cos(roll_rad), sin(pitch_rad), cos(pitch_rad) — computed by reconstructing roll_rad/pitch_rad from lst_hours and obs_ra_deg/obs_dec_deg
+Kept: lst_hours, obs_ra_deg, obs_dec_deg, previous_acq_error_ra, previous_acq_error_dec
+Net: went from 11 input features down to 9
+
+Change 4 — Updated FEATURE_NAMES tuple to match the new 9-feature schema (documentation only, not functionally consumed elsewhere in the file)
+Change 5 — Cleaned up train_and_evaluate to take only (X_train, y_train, X_eval, y_eval) instead of also test sets, updated print statements to say "eval set" for clarity, removed dead/commented-out code from main()
