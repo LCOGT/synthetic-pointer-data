@@ -53,6 +53,7 @@ Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
   
 - **synthetic-pointer-data v.3**: added tan(pitch) and 1/cos(pitch) as features
 - **synthetic-pointer-data v.4**: trained with just 1/cos(pitch) as the additional feature
+- **synthetic-pointer-data v.5**: added XGBoost parameters (hyperparameter tuning)
 
 ## Changes to `booster.py`
 
