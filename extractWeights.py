@@ -10,7 +10,6 @@ model_dec.load_model("models/model_dec.json")
 feature_names = [
     "lst_hours", "obs_ra_deg", "obs_dec_deg",
     "sin_roll", "cos_roll", "sin_pitch", "cos_pitch",
-    "sec_pitch",
     "previous_acq_error_ra", "previous_acq_error_dec"
 ]
 

@@ -1,23 +1,21 @@
 === RA Model Feature Importance ===
-                  sin_roll: 0.3069
-               obs_dec_deg: 0.2606
-                 cos_pitch: 0.1558
-                  cos_roll: 0.1377
-                 sec_pitch: 0.0860
-    previous_acq_error_dec: 0.0151
-                obs_ra_deg: 0.0136
-     previous_acq_error_ra: 0.0127
-                 lst_hours: 0.0116
-                 sin_pitch: 0.0000
+                 sin_pitch: 0.2668
+                  sin_roll: 0.2305
+               obs_dec_deg: 0.2020
+                 cos_pitch: 0.1229
+                  cos_roll: 0.0925
+    previous_acq_error_dec: 0.0229
+     previous_acq_error_ra: 0.0222
+                obs_ra_deg: 0.0208
+                 lst_hours: 0.0196
 
 === Dec Model Feature Importance ===
-                  sin_roll: 0.3258
-               obs_dec_deg: 0.2208
-                  cos_roll: 0.2206
-                 cos_pitch: 0.1006
-                 sec_pitch: 0.0852
-     previous_acq_error_ra: 0.0123
-    previous_acq_error_dec: 0.0122
-                obs_ra_deg: 0.0112
-                 lst_hours: 0.0112
-                 sin_pitch: 0.0000
+                  sin_roll: 0.3801
+                 sin_pitch: 0.1900
+               obs_dec_deg: 0.1461
+                  cos_roll: 0.1299
+                 cos_pitch: 0.0703
+                obs_ra_deg: 0.0219
+    previous_acq_error_dec: 0.0215
+     previous_acq_error_ra: 0.0208
+                 lst_hours: 0.0194

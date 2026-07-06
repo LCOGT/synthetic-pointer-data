@@ -2,7 +2,7 @@
 
 Dependencies: Python, Pandas, Matplotlib, Astropy
 
-- Clone the repository for the model: https://github.com/jzariski/Portfolio.git. This project uses the code in the folder telescope-api-main.
+- Clone the repository for the model: https://github.com/jzariski/Portfolio.git. This project uses the code in the folder telescope-api-main/api.
 
 ## Training
 
@@ -49,11 +49,13 @@ Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
 
 - **synthetic-pointer-data v.1**: First draft. Built a basic validation pipeline that used standard values for Tpoint coefficients and used the same features for model training/testing as provided by the author of the model. Removed eval/testing split in booster.py, trained model using ALL data points. Generated 3 categories of plots.
 
-- **synthetic-pointer-data v.2**: Restored validation split, implemented feature engineering (removed all time-related features and included sine and cosine values of roll/pitch. Generated 6 categories of plots.
+- **synthetic-pointer-data v.2**: Restored validation split, implemented feature engineering (removed all time-related features and included sine and cosine values of roll/pitch). Generated 6 categories of plots.
   
 - **synthetic-pointer-data v.3**: added tan(pitch) and 1/cos(pitch) as features
+
 - **synthetic-pointer-data v.4**: trained with just 1/cos(pitch) as the additional feature
 - **synthetic-pointer-data v.5**: added XGBoost parameters (hyperparameter tuning)
+- **synthetic-pointer-data v.6**: kept most of the parameters the same, only changed the loss function from MSE to MAE so that the results would be more precise
 
 ## Changes to `booster.py`
 
