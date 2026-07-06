@@ -52,6 +52,7 @@ Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
 - **synthetic-pointer-data v.2**: Restored validation split, implemented feature engineering (removed all time-related features and included sine and cosine values of roll/pitch. Generated 6 categories of plots.
   
 - **synthetic-pointer-data v.3**: added tan(pitch) and 1/cos(pitch) as features
+- **synthetic-pointer-data v.4**: trained with just 1/cos(pitch) as the additional feature
 
 ## Changes to `booster.py`
 
