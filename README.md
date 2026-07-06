@@ -146,9 +146,7 @@ clustering.
 
 Change 1 — Train on full dataset (later reverted) Initially modified main() to train on all 20,000 points with no train/eval/test split, removing early_stopping_rounds. This was per the manager's first instruction before the meeting with the model builder.
 
-Change 2 — Restored split + early stopping (per model builder's request) Reverted back to a chronological split, but simplified to train/eval only (90/10), no held-out test set — since validateExternal.py serves as the true external test. Restored early_stopping_rounds=100.
-
-Change 3 — Feature engineering overhaul (the trig features) In make_features_and_labels:
+Change 2 — Restored split + early stopping (per model builder's request) Reverted back to a chronological split, but simplified to train/eval only (90/10), no held-out test set — since validateExternal.py serves as the true external test. Restored early_stopping_rounds=100. Feature engineering overhaul (the trig features) In make_features_and_labels:
 Dropped: year, month, day, hour, minute, second (redundant proxies for lst_hours, confirmed by both independent analysis and the model builder's own coord.py design)
 Added: sin(roll_rad), cos(roll_rad), sin(pitch_rad), cos(pitch_rad) — computed by reconstructing roll_rad/pitch_rad from lst_hours and obs_ra_deg/obs_dec_deg
 Kept: lst_hours, obs_ra_deg, obs_dec_deg, previous_acq_error_ra, previous_acq_error_dec
