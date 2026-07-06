@@ -50,6 +50,8 @@ Shift the model.json files into Portfolio/telescope-api-main/api-flask/models
 - **synthetic-pointer-data v.1**: First draft. Built a basic validation pipeline that used standard values for Tpoint coefficients and used the same features for model training/testing as provided by the author of the model. Removed eval/testing split in booster.py, trained model using ALL data points. Generated 3 categories of plots.
 
 - **synthetic-pointer-data v.2**: Restored validation split, implemented feature engineering (removed all time-related features and included sine and cosine values of roll/pitch. Generated 6 categories of plots.
+  
+- **synthetic-pointer-data v.3**: added tan(pitch) and 1/cos(pitch) as features
 
 ## Changes to `booster.py`
 
