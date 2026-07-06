@@ -160,7 +160,7 @@ Change 6 — Tested tan(pitch) and 1/cos(pitch) as additional features (v.3), th
 
 Change 7 — Replaced xgb_params with the full hyperparameter set listed above under "Final XGBoost hyperparameters" (v.5), then reverted only the objective from reg:squarederror to reg:absoluteerror (v.6, final).
 
-Versioned copies of booster.py for each stage above are included in this repo under api/booster_versions/ (e.g. booster_v1_full_dataset.py ... booster_v6_final_mae.py) so each experiment can be reproduced exactly. The active api/booster.py is the final v.6 configuration.
+Versioned copies of booster.py for each stage above are included in this repo under the folder booster-py-versions (e.g. booster_v1_full_dataset.py ... booster-v6-xgboos.py) so each experiment can be reproduced exactly. The active booster.py is the final v.6 configuration. Make sure to copy this over to Portfolio/telescope-api-main/api/booster.py before running the pipeline.
 
 ## Pipeline Summary
 
