@@ -149,7 +149,7 @@ def main():
 
         X = np.array([[lst_float, target_ra_apparent * 15.0, target_dec_apparent,
         np.sin(roll_rad), np.cos(roll_rad), np.sin(pitch_rad), np.cos(pitch_rad),
-        np.tan(pitch_rad), 1.0 / np.cos(pitch_rad),
+        1.0 / np.cos(pitch_rad),
         0.0, 0.0]])# previous_acq_error initialized to 0
 
         predicted_ra_offset_deg = float(model_ra.predict(X)[0])
